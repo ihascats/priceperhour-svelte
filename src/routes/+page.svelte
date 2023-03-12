@@ -81,6 +81,7 @@
 	}
 
 	async function search() {
+		if (isLoading.loading) return;
 		const title = searchTerm.trim().toLowerCase();
 		if (title.length <= 3) return;
 
