@@ -3,9 +3,9 @@
 	import Exchange from './components/Exchange.svelte';
 	import GamePlatforms from './components/GamePlatforms.svelte';
 	import GamePrice from './components/GamePrice.svelte';
+	import LoadingScreen from './components/LoadingScreen.svelte';
 	import Selectors from './components/Selectors.svelte';
 	import TimesToBeat from './components/TimesToBeat.svelte';
-	import Loading from './icons/Loading.svelte';
 	import Search from './icons/Search.svelte';
 
 	export let arrayHowLongToBeatGames = [];
@@ -110,7 +110,12 @@
 		});
 		const howLongToBeatTitles = await apiHowLongToBeat(title);
 
-		if (!howLongToBeatTitles.length || !steamTitles.length) return;
+		if (!howLongToBeatTitles?.length || !steamTitles?.length) {
+			resetEverything();
+			clearInterval(loadingBarInterval);
+			return;
+		}
+
 		updateLoadingParameters({
 			loading: true,
 			message: 'Fetching price',
@@ -137,21 +142,7 @@
 
 <div class="flex justify-center bg-neutral-700">
 	{#if isLoading.loading}
-		<div
-			class="max-w-[500px] fill-orange-300 top-0 min-h-screen w-full bg-neutral-600/20 backdrop-blur-md border-x-2 border-neutral-900 flex flex-col text-orange-400 justify-center items-center fixed"
-		>
-			<Loading />
-			<div class="font-mono flex">
-				{isLoading.message}
-				<p class="loader__dot">.</p>
-				<p class="loader__dot">.</p>
-			</div>
-			{#if isLoading?.completion}
-				<div class="h-full w-1/2 border-2 border-orange-600 rounded">
-					<div class={`loading-bar bg-lime-500 h-4`} />
-				</div>
-			{/if}
-		</div>
+		<LoadingScreen {isLoading} />
 	{/if}
 	<div
 		class="flex flex-col-reverse w-full max-w-[500px] min-h-screen bg-neutral-800 border-x-2 border-neutral-900 gap-2"
