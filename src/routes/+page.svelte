@@ -1,5 +1,6 @@
 <script>
 	import { tick } from 'svelte';
+	import ErrorScreen from './components/ErrorScreen.svelte';
 	import Exchange from './components/Exchange.svelte';
 	import GamePlatforms from './components/GamePlatforms.svelte';
 	import GamePrice from './components/GamePrice.svelte';
@@ -17,20 +18,21 @@
 	export let selectedSteamGameData = {};
 	export let exchangeToCurrency = 'EUR';
 
+	function resetEverything() {
+		arrayHowLongToBeatGames = [];
+		arraySteamGames = [];
+		selectedCurrencyExchangeRates = {};
+		selectedSteamTitle = {};
+		selectedHowLongToBeatTitle = {};
+		selectedSteamGameData = {};
+		isLoading = { loading: false };
+	}
+
 	async function apiExchange(exchangeToCurrency) {
 		const response = await fetch(`/api/exchange/${exchangeToCurrency}`);
 		const json = await response.json();
 		return json.rates;
 	}
-
-	async function apiSteamGame(id, selectedCurrency) {
-		const response = await fetch(
-			`/api/steam/${id}/${selectedCurrency.toLowerCase().trim().slice(0, -1)}`
-		);
-		const json = await response.json();
-		return json;
-	}
-
 	// Runs if a game has been selected and exchangeToCurrency has been changed
 	$: if (selectedSteamTitle?.appid) {
 		isLoading = { loading: true, message: 'Confirming exchange rates' };
@@ -40,6 +42,13 @@
 		});
 	}
 
+	async function apiSteamGame(id, selectedCurrency) {
+		const response = await fetch(
+			`/api/steam/${id}/${selectedCurrency.toLowerCase().trim().slice(0, -1)}`
+		);
+		const json = await response.json();
+		return json;
+	}
 	// Runs if a game has been selected and selectedCurrency has been changed
 	$: if (selectedSteamTitle?.appid) {
 		isLoading = { loading: true, message: 'Fetching new price from Steam' };
@@ -49,17 +58,29 @@
 		});
 	}
 
-	async function apiHowLongToBeat(title) {
+	let isError = false;
+	async function apiHowLongToBeat(title, interval) {
 		const response = await fetch(`/api/howlongtobeat/${title}`);
 		const titles = await response.json();
-
-		return [...titles.response].sort((a, b) => a.name.length - b.name.length);
+		try {
+			return [...titles.response].sort((a, b) => a.name.length - b.name.length);
+		} catch (error) {
+			isError = true;
+			clearInterval(interval);
+			resetEverything();
+		}
 	}
 
-	async function apiSteamLibrary(title) {
+	async function apiSteamLibrary(title, interval) {
 		const response = await fetch(`/api/steam/steamLibrary/${title}`);
 		const titles = await response.json();
-		return [...titles.arrayGames];
+		try {
+			return [...titles.arrayGames];
+		} catch (error) {
+			isError = true;
+			clearInterval(interval);
+			resetEverything();
+		}
 	}
 
 	let searchTerm = '';
@@ -100,7 +121,12 @@
 			updateLoadingBar();
 		}, 1000);
 
-		const steamTitles = await apiSteamLibrary(title);
+		const steamTitles = await apiSteamLibrary(title, loadingBarInterval);
+
+		if (!steamTitles?.length) {
+			clearInterval(loadingBarInterval);
+			return;
+		}
 
 		updateLoadingParameters({
 			loading: true,
@@ -108,10 +134,10 @@
 			completion: 75,
 			maxCompletion: 94
 		});
-		const howLongToBeatTitles = await apiHowLongToBeat(title);
 
-		if (!howLongToBeatTitles?.length || !steamTitles?.length) {
-			resetEverything();
+		const howLongToBeatTitles = await apiHowLongToBeat(title, loadingBarInterval);
+
+		if (!howLongToBeatTitles?.length) {
 			clearInterval(loadingBarInterval);
 			return;
 		}
@@ -143,6 +169,9 @@
 <div class="flex justify-center bg-neutral-700">
 	{#if isLoading.loading}
 		<LoadingScreen {isLoading} />
+	{/if}
+	{#if isError}
+		<ErrorScreen {search} bind:isError />
 	{/if}
 	<div
 		class="flex flex-col-reverse w-full max-w-[500px] min-h-screen bg-neutral-800 border-x-2 border-neutral-900 gap-2"
