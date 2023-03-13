@@ -8,10 +8,8 @@
 	class="max-w-[500px] fill-orange-300 top-0 min-h-screen w-full bg-neutral-600/20 backdrop-blur-md border-x-2 border-neutral-900 flex flex-col text-orange-400 justify-center items-center fixed"
 >
 	<Loading />
-	<div class="font-mono flex">
-		{isLoading.message}
-		<p class="loader__dot">.</p>
-		<p class="loader__dot">.</p>
+	<div class="font-mono flex text-center">
+		{isLoading.message}..
 	</div>
 	{#if isLoading?.completion}
 		<div class="h-full w-1/2 border-2 border-orange-600 rounded">
