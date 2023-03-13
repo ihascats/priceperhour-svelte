@@ -166,6 +166,13 @@
 	}
 </script>
 
+<svelte:head>
+	<title>Price Per Hour</title>
+	<meta
+		name="Easily compare the cost of different games and make an informed decision about which ones are worth your time and money."
+	/>
+</svelte:head>
+
 <div class="flex justify-center bg-neutral-700">
 	{#if isLoading.loading}
 		<LoadingScreen {isLoading} />
@@ -187,6 +194,7 @@
 					if (event.key.toLowerCase() !== 'enter') return;
 					search;
 				}}
+				aria-label="Search"
 			/>
 			<button on:click={search} class="text-neutral-400 fill-orange-400">
 				<Search />
