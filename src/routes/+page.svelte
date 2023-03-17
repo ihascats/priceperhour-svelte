@@ -58,14 +58,22 @@
 		});
 	}
 
-	let isError = false;
+	let isError = { error: false };
 	async function apiHowLongToBeat(title, interval) {
 		const response = await fetch(`/api/howlongtobeat/${title}`);
 		const titles = await response.json();
 		try {
+			if (!titles?.response.length) {
+				updateErrorParameters({
+					error: true,
+					retry: false,
+					message: 'HOW LONG TO BEAT 404: NO MATCHES FOUND'
+				});
+				return;
+			}
 			return [...titles.response].sort((a, b) => a.name.length - b.name.length);
 		} catch (error) {
-			isError = true;
+			updateErrorParameters({ error: true, retry: true, message: '500: Internal Server Error' });
 			clearInterval(interval);
 			resetEverything();
 		}
@@ -75,9 +83,17 @@
 		const response = await fetch(`/api/steam/steamLibrary/${title}`);
 		const titles = await response.json();
 		try {
+			if (!titles?.arrayGames.length) {
+				updateErrorParameters({
+					error: true,
+					retry: false,
+					message: 'STEAM 404: NO MATCHES FOUND'
+				});
+				return;
+			}
 			return [...titles.arrayGames];
 		} catch (error) {
-			isError = true;
+			updateErrorParameters({ error: true, retry: true, message: '500: Internal Server Error' });
 			clearInterval(interval);
 			resetEverything();
 		}
@@ -99,6 +115,14 @@
 		};
 		await tick();
 		updateLoadingBar();
+	}
+
+	async function updateErrorParameters({ error, retry, message }) {
+		isError = {
+			error,
+			retry,
+			message
+		};
 	}
 
 	async function search() {
@@ -172,7 +196,7 @@
 	{#if isLoading.loading}
 		<LoadingScreen {isLoading} />
 	{/if}
-	{#if isError}
+	{#if isError.error}
 		<ErrorScreen {search} bind:isError />
 	{/if}
 	<div
