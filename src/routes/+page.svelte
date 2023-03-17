@@ -125,6 +125,7 @@
 
 		if (!steamTitles?.length) {
 			clearInterval(loadingBarInterval);
+			resetEverything();
 			return;
 		}
 
@@ -139,6 +140,7 @@
 
 		if (!howLongToBeatTitles?.length) {
 			clearInterval(loadingBarInterval);
+			resetEverything();
 			return;
 		}
 
