@@ -4,9 +4,11 @@
 	import Exchange from './components/Exchange.svelte';
 	import GamePlatforms from './components/GamePlatforms.svelte';
 	import GamePrice from './components/GamePrice.svelte';
+	import HistoryList from './components/HistoryList.svelte';
 	import LoadingScreen from './components/LoadingScreen.svelte';
 	import Selectors from './components/Selectors.svelte';
 	import TimesToBeat from './components/TimesToBeat.svelte';
+	import History from './icons/History.svelte';
 	import Search from './icons/Search.svelte';
 
 	export let arrayHowLongToBeatGames = [];
@@ -17,6 +19,7 @@
 	export let selectedHowLongToBeatTitle = {};
 	export let selectedSteamGameData = {};
 	export let exchangeToCurrency = 'EUR';
+	let searchHistory = [];
 
 	function resetEverything() {
 		arrayHowLongToBeatGames = [];
@@ -130,6 +133,12 @@
 		const title = searchTerm.trim().toLowerCase();
 		if (title.length <= 3) return;
 
+		const indexOfHistoricMatch = searchHistory.findIndex((item) => item.searchedTerm === title);
+		if (indexOfHistoricMatch > -1) {
+			historyMatch(indexOfHistoricMatch);
+			return;
+		}
+
 		updateLoadingParameters({
 			loading: true,
 			message: 'Searching for matches on Steam',
@@ -189,6 +198,34 @@
 
 		clearInterval(loadingBarInterval);
 		isLoading = { loading: false };
+
+		if (!searchHistory.some((item) => item.searchedTerm === title)) {
+			const latestItem = {
+				// Save searched title so there are no duplicates in the history
+				searchedTerm: title,
+
+				// Steam Related Information
+				arraySteamGames,
+				selectedSteamTitle,
+				selectedSteamGameData,
+
+				// HowLongToBeat Related Information
+				arrayHowLongToBeatGames,
+				selectedHowLongToBeatTitle,
+				image: `https://cdn.cloudflare.steamstatic.com/steam/apps/${selectedSteamTitle.appid}/header.jpg`
+			};
+			searchHistory.push(latestItem);
+		}
+	}
+	let showHistory = false;
+
+	function historyMatch(searchIndex) {
+		const selected = searchHistory[searchIndex];
+		arraySteamGames = selected.arraySteamGames;
+		selectedSteamTitle = selected.selectedSteamTitle;
+		selectedSteamGameData = selected.selectedSteamGameData;
+		arrayHowLongToBeatGames = selected.arrayHowLongToBeatGames;
+		selectedHowLongToBeatTitle = selected.selectedHowLongToBeatTitle;
 	}
 </script>
 
@@ -198,6 +235,9 @@
 	{/if}
 	{#if isError.error}
 		<ErrorScreen {search} bind:isError />
+	{/if}
+	{#if showHistory}
+		<HistoryList {searchHistory} {historyMatch} bind:showHistory />
 	{/if}
 	<div
 		class="flex flex-col-reverse w-full max-w-[500px] min-h-screen bg-neutral-800 border-x-2 border-neutral-900 gap-2"
@@ -217,6 +257,12 @@
 			<button on:click={search} class="text-neutral-400 fill-orange-400" aria-label="Search">
 				<Search />
 			</button>
+			<button
+				on:click={() => {
+					showHistory = true;
+				}}
+				class="fill-orange-400"><History /></button
+			>
 		</form>
 		<Selectors
 			{arrayHowLongToBeatGames}
@@ -240,6 +286,10 @@
 						alt=""
 						src={`https://cdn.cloudflare.steamstatic.com/steam/apps/${selectedSteamTitle.appid}/header.jpg`}
 						class=" bg-zinc-800 w-full"
+						on:error={(event) => {
+							event.target.src =
+								'https://cdn.cloudflare.steamstatic.com/steam/apps/2062550/capsule_231x87.jpg?t=1663297175';
+						}}
 					/>
 				</div>
 			</div>
