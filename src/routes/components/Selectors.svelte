@@ -1,5 +1,6 @@
 <script>
 	import { currencies } from '../currencies';
+	import OpenInNewTab from '../icons/OpenInNewTab.svelte';
 	export let arrayHowLongToBeatGames = [];
 	export let arraySteamGames = [];
 	export let selectedCurrency = 'USD';
@@ -23,33 +24,50 @@
 	</label>
 	<label class="flex flex-col w-full font-mono text-sm">
 		How long to beat ({arrayHowLongToBeatGames?.length || 0}):
-		<select
-			class="bg-transparent border-b-2 border-neutral-400 text-neutral-50 font-sans text-base"
-			on:change={(event) => {
-				selectedHowLongToBeatTitle = arrayHowLongToBeatGames[event.target.value];
-			}}
-		>
-			{#each arrayHowLongToBeatGames as game, index}
-				<option class="bg-neutral-900" key={game.id} value={index}>
-					{game.name} ({game.id})
-				</option>
-			{/each}
-		</select>
+		<div class="flex truncate w-full">
+			<select
+				class="bg-transparent truncate w-full border-b-2 border-neutral-400 text-neutral-50 font-sans text-base"
+				on:change={(event) => {
+					selectedHowLongToBeatTitle = arrayHowLongToBeatGames[event.target.value];
+				}}
+			>
+				{#each arrayHowLongToBeatGames as game, index}
+					<option class="bg-neutral-900" key={game.id} value={index}>
+						{game.name} ({game.id})
+					</option>
+				{/each}
+			</select>
+			<a
+				href={`https://howlongtobeat.com/game/${selectedHowLongToBeatTitle.id}`}
+				target="_blank"
+				rel="noreferrer"
+				class=" flex self-center rounded fill-blue-500"><OpenInNewTab /></a
+			>
+		</div>
 	</label>
+	<!-- https://howlongtobeat.com/game/94128 -->
 
 	<label class="flex flex-col w-full font-mono text-sm">
 		Steam ({arraySteamGames?.length || 0}):
-		<select
-			class="bg-transparent border-b-2 border-neutral-400 text-neutral-50 font-sans text-base"
-			on:change={(event) => {
-				selectedSteamTitle = arraySteamGames[event.target.value];
-			}}
-		>
-			{#each arraySteamGames as game, index}
-				<option class="bg-neutral-900" key={game.appid} value={index}>
-					{game.name} ({game.appid})
-				</option>
-			{/each}
-		</select>
+		<div class="flex truncate w-full">
+			<select
+				class="bg-transparent truncate w-full border-b-2 border-neutral-400 text-neutral-50 font-sans text-base"
+				on:change={(event) => {
+					selectedSteamTitle = arraySteamGames[event.target.value];
+				}}
+			>
+				{#each arraySteamGames as game, index}
+					<option class="bg-neutral-900" key={game.appid} value={index}>
+						{game.name} ({game.appid})
+					</option>
+				{/each}
+			</select>
+			<a
+				href={`https://store.steampowered.com/app/${selectedSteamTitle.appid}`}
+				target="_blank"
+				rel="noreferrer"
+				class=" flex self-center rounded fill-blue-500"><OpenInNewTab /></a
+			>
+		</div>
 	</label>
 </div>
