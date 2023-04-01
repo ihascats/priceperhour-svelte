@@ -24,7 +24,7 @@
 	</label>
 	<label class="flex flex-col w-full font-mono text-sm">
 		How long to beat ({arrayHowLongToBeatGames?.length || 0}):
-		<div class="flex truncate w-full">
+		<div class="flex truncate w-full gap-2">
 			<select
 				class="bg-transparent truncate w-full border-b-2 border-neutral-400 text-neutral-50 font-sans text-base"
 				on:change={(event) => {
@@ -41,15 +41,15 @@
 				href={`https://howlongtobeat.com/game/${selectedHowLongToBeatTitle.id}`}
 				target="_blank"
 				rel="noreferrer"
-				class=" flex self-center rounded fill-blue-500"><OpenInNewTab /></a
+				class=" flex self-center rounded fill-blue-500 bg-indigo-300/20 p-1"
+				aria-label="Go to HowLongToBeat page"><OpenInNewTab /></a
 			>
 		</div>
 	</label>
-	<!-- https://howlongtobeat.com/game/94128 -->
 
 	<label class="flex flex-col w-full font-mono text-sm">
 		Steam ({arraySteamGames?.length || 0}):
-		<div class="flex truncate w-full">
+		<div class="flex truncate w-full gap-2">
 			<select
 				class="bg-transparent truncate w-full border-b-2 border-neutral-400 text-neutral-50 font-sans text-base"
 				on:change={(event) => {
@@ -66,7 +66,8 @@
 				href={`https://store.steampowered.com/app/${selectedSteamTitle.appid}`}
 				target="_blank"
 				rel="noreferrer"
-				class=" flex self-center rounded fill-blue-500"><OpenInNewTab /></a
+				class=" flex self-center rounded fill-blue-500 bg-indigo-300/20 p-1"
+				aria-label="Go to Steam store page"><OpenInNewTab /></a
 			>
 		</div>
 	</label>

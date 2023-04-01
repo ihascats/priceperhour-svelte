@@ -261,7 +261,8 @@
 				on:click={() => {
 					showHistory = true;
 				}}
-				class="fill-orange-400"><History /></button
+				class="fill-orange-400"
+				aria-label="History"><History /></button
 			>
 		</form>
 		<Selectors
