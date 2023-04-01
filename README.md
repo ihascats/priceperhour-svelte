@@ -15,8 +15,10 @@ _Now with better performance and less data usage!_
   <li>Search for any Steam game to see its current price and average completion time</li>
   <li>See the price per hour of gameplay, allowing you to easily compare the value of different games</li>
   <li>View the exchange rate for different currencies, allowing you to see how the game's price compares in different regions</li>
-  <li><strong><i>NEW!</i></strong> Progressive loading screen <i>(so you know you are not stuck!)</i></li>
-  <li><strong><i>NEW!</i></strong> Error screen in case something goes wrong :( <i>(hopefully you won't see this one)</i></li>
+  <li>Progressive loading screen <i>(so you know you are not stuck!)</i></li>
+  <li>Error screen in case something goes wrong :( <i>(hopefully you won't see this one)</i></li>
+  <li><strong><i>NEW!</i></strong> Search history</li>
+  <li><strong><i>NEW!</i></strong> Links to the Steam store and HowLongToBeat</li>
 </ul>
 
-![image](https://user-images.githubusercontent.com/94207512/224587384-18e0a771-9f1f-4749-ae14-6018ab387aa3.png)
+![image](https://user-images.githubusercontent.com/94207512/229289073-0091cabf-07bd-4fe0-a903-3bc9b18bb9e9.png)
