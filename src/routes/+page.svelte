@@ -169,13 +169,13 @@
 			maxCompletion: 94
 		});
 
-		const howLongToBeatTitles = await apiHowLongToBeat(title, loadingBarInterval);
+		// const howLongToBeatTitles = await apiHowLongToBeat(title, loadingBarInterval);
 
-		if (!howLongToBeatTitles?.length) {
-			clearInterval(loadingBarInterval);
-			resetEverything();
-			return;
-		}
+		// if (!howLongToBeatTitles?.length) {
+		// 	clearInterval(loadingBarInterval);
+		// 	resetEverything();
+		// 	return;
+		// }
 
 		updateLoadingParameters({
 			loading: true,
@@ -189,8 +189,8 @@
 		selectedSteamGameData = await apiSteamGame(steamTitles[0].appid, selectedCurrency);
 
 		// set how long to beat selected game and array of all matches
-		arrayHowLongToBeatGames = howLongToBeatTitles;
-		selectedHowLongToBeatTitle = arrayHowLongToBeatGames[0];
+		// arrayHowLongToBeatGames = howLongToBeatTitles;
+		selectedHowLongToBeatTitle = '';
 
 		// set steam selected game and array of all matches
 		arraySteamGames = steamTitles;
@@ -279,7 +279,7 @@
 		{/if}
 		<GamePlatforms {selectedHowLongToBeatTitle} />
 
-		{#if Object.keys(selectedHowLongToBeatTitle).length > 0}
+		{#if Object.keys(selectedSteamTitle).length > 0}
 			<div class="bg-neutral-800 font-mono text-neutral-50 p-2">
 				<p>Steam Image:</p>
 				<div class="max-h-[230px] grid justify-center bg-neutral-800">
