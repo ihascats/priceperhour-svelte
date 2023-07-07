@@ -66,7 +66,7 @@
 		const response = await fetch(`/api/howlongtobeat/${title}`);
 		const titles = await response.json();
 		try {
-			if (!titles?.response.length) {
+			if (!titles?.game_info.length) {
 				updateErrorParameters({
 					error: true,
 					retry: false,
@@ -74,7 +74,7 @@
 				});
 				return;
 			}
-			return [...titles.response].sort((a, b) => a.name.length - b.name.length);
+			return [...titles.game_info].sort((a, b) => a.game_name.length - b.game_name.length);
 		} catch (error) {
 			updateErrorParameters({ error: true, retry: true, message: '500: Internal Server Error' });
 			clearInterval(interval);
@@ -169,13 +169,12 @@
 			maxCompletion: 94
 		});
 
-		// const howLongToBeatTitles = await apiHowLongToBeat(title, loadingBarInterval);
-
-		// if (!howLongToBeatTitles?.length) {
-		// 	clearInterval(loadingBarInterval);
-		// 	resetEverything();
-		// 	return;
-		// }
+		const howLongToBeatTitles = await apiHowLongToBeat(title, loadingBarInterval);
+		if (!howLongToBeatTitles?.length) {
+			clearInterval(loadingBarInterval);
+			resetEverything();
+			return;
+		}
 
 		updateLoadingParameters({
 			loading: true,
@@ -189,8 +188,8 @@
 		selectedSteamGameData = await apiSteamGame(steamTitles[0].appid, selectedCurrency);
 
 		// set how long to beat selected game and array of all matches
-		// arrayHowLongToBeatGames = howLongToBeatTitles;
-		selectedHowLongToBeatTitle = '';
+		arrayHowLongToBeatGames = howLongToBeatTitles;
+		selectedHowLongToBeatTitle = arrayHowLongToBeatGames[0];
 
 		// set steam selected game and array of all matches
 		arraySteamGames = steamTitles;
@@ -299,7 +298,11 @@
 			<div class="bg-neutral-800 font-mono text-neutral-50 p-2">
 				<p>How Long To Beat Image:</p>
 				<div class="max-h-[230px] grid justify-center bg-neutral-800">
-					<img alt="" src={selectedHowLongToBeatTitle.imageUrl} class="bg-zinc-800 max-h-[230px]" />
+					<img
+						alt=""
+						src={`https://howlongtobeat.com/games/${selectedHowLongToBeatTitle.game_image}`}
+						class="bg-zinc-800 max-h-[230px]"
+					/>
 				</div>
 			</div>
 		{/if}

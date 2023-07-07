@@ -32,13 +32,13 @@
 				}}
 			>
 				{#each arrayHowLongToBeatGames as game, index}
-					<option class="bg-neutral-900" key={game.id} value={index}>
-						{game.name} ({game.id})
+					<option class="bg-neutral-900" key={game.game_id} value={index}>
+						{game.game_name} ({game.game_id})
 					</option>
 				{/each}
 			</select>
 			<a
-				href={`https://howlongtobeat.com/game/${selectedHowLongToBeatTitle.id}`}
+				href={`https://howlongtobeat.com/game/${selectedHowLongToBeatTitle.game_id}`}
 				target="_blank"
 				rel="noreferrer"
 				class=" flex self-center rounded fill-blue-500 bg-indigo-300/20 p-1"

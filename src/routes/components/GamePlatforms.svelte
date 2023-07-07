@@ -6,7 +6,9 @@
 	Platforms:
 	<div class="flex flex-wrap gap-1 text-neutral-300">
 		{#if Object.keys(selectedHowLongToBeatTitle).length}
-			{#each selectedHowLongToBeatTitle?.platforms.sort((a, b) => a.length - b.length) as platform}
+			{#each selectedHowLongToBeatTitle?.profile_platform
+				.split(', ')
+				.sort((a, b) => a.length - b.length) as platform}
 				<div class="bg-neutral-700 px-2" key={platform}>
 					{platform}
 				</div>
