@@ -1,5 +1,7 @@
 # Welcome to <a href='https://priceperhour-svelte.vercel.app/'>PricePerHour-Svelte</a>
 
+## Not working due to change in steam api, cba.
+
 <img src="https://img.shields.io/badge/Sveltekit-3C005A?style=for-the-badge&logo=svelte&logoColor=white" height=30>
 
 <p>Remake of the previous <a href='https://github.com/ihascats/priceperhour'>priceperhour</a> project, this time made using Sveltekit framework!</p>
